@@ -130,16 +130,20 @@ int rechercherDegre(graphe g){
     return degre_max;
 }
 
-int Cycle(sommet* s, int* visited, int parent) {
+int Cycle(sommet* s, int* visited, int parent, graphe g) {
+
     visited[s->indice] = 1;
 
     voisin* v = s->first_voisin;
     while (v != NULL) {
-        if (!visited[v->indice]) {
-            if (estCycleDFS(v, visited, s->indice))
+        if (visited[v->indice] == 0){
+            sommet* sommet_associe = rechercherSommet(g, v->indice);
+            if(Cycle(sommet_associe, visited, s->indice, g) == 1){
                 return 1;
-        } else if (v->indice != parent)
+            }
+        }else if (v->indice != parent){
             return 1;
+        }
         v = v->next_voisin;
     }
     return 0;
@@ -151,10 +155,11 @@ int contientBoucle(graphe g){
 
     sommet* current = g.premier_sommet;
     while (current != NULL) {
-        if (!visited[current->indice] && estCycleDFS(current, visited, -1))
+        if (visited[current->indice] == 0 && Cycle(current, visited, -1, g) == 1)
             return 1; 
         current = current->next;
     }
     return 0; 
 }
+
 
