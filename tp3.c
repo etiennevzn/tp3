@@ -1,8 +1,7 @@
-//Fonctions
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "tp3.h"
+#define NB_MAX_SOMMETS 50
 
 graphe* creerGraphe(){
     graphe* nvGraphe = NULL;
@@ -37,9 +36,34 @@ sommet* rechercherSommet(graphe g, int id){
 }
 
 void creerSommet(graphe* g, int id) {
+
+    sommet* currentSommet = g->premier_sommet;
+    while (currentSommet != NULL) {
+        if (currentSommet->indice == id) {
+            printf("Un sommet avec l'indice %d existe déjà dans le graphe.\n", id);
+            return;
+        }
+        currentSommet = currentSommet->next;
+    }
+
     sommet* nouveau = malloc(sizeof(sommet));
+    if (nouveau == NULL) {
+        return NULL;
+    }
+
     nouveau->indice = id;
+    nouveau->first_voisin = NULL;
     nouveau->next = NULL;
+
+    int entree_id = 0;
+    printf("Entrez un voisin de %d, -1 pour arreter : ", nouveau->indice);
+    scanf_s("%d", &entree_id);
+
+    while (entree_id != -1) {
+        ajouterArete(g, id, entree_id);
+        printf("Entrez le voisin suivant de %d, -1 pour arreter : ", nouveau->indice);
+        scanf_s("%d", &entree_id);
+    }
 
     if (g->premier_sommet == NULL || id < g->premier_sommet->indice) {
         nouveau->next = g->premier_sommet;
@@ -62,16 +86,28 @@ void creerSommet(graphe* g, int id) {
 graphe* construireGraphe(int N){
     graphe* user_graph = creerGraphe();
     int id_somm = 0;
+    int liste_sommets[NB_MAX_SOMMETS];
+    int i,j;
+
     printf("Saisissez l'id du sommet initial : \n");
     scanf("%d", &id_somm);
-    insererSommet(user_graph, id_somm);
+    liste_sommets[0] = id_somm;
+    creerSommet(user_graph, id_somm);
 
-    for(int i=2; i<=N; i++){
+    for(i=1; i<N; i++){
         printf("Saisissez l'id du %deme sommet : \n", i);
         scanf("%d", &id_somm);
-        insererSommet(user_graph, id_somm);
-    }
 
+        for (j = 0; j < i; j++) {
+            if (liste_sommets[j] == id_somm) {
+                printf("Le sommet avec l'indice %d a déjà été ajouté.\n", id_somm);
+                break;
+            }
+        }
+        liste_sommets[i] = id_somm;
+        creerSommet(user_graph, id_somm);
+        i++;
+    }
     return user_graph; 
 }
 
@@ -94,7 +130,31 @@ int rechercherDegre(graphe g){
     return degre_max;
 }
 
+int Cycle(sommet* s, int* visited, int parent) {
+    visited[s->indice] = 1;
+
+    voisin* v = s->first_voisin;
+    while (v != NULL) {
+        if (!visited[v->indice]) {
+            if (estCycleDFS(v, visited, s->indice))
+                return 1;
+        } else if (v->indice != parent)
+            return 1;
+        v = v->next_voisin;
+    }
+    return 0;
+}
+
 int contientBoucle(graphe g){
 
+    int visited[NB_MAX_SOMMETS] = {0};
+
+    sommet* current = g.premier_sommet;
+    while (current != NULL) {
+        if (!visited[current->indice] && estCycleDFS(current, visited, -1))
+            return 1; 
+        current = current->next;
+    }
+    return 0; 
 }
 
