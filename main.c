@@ -10,14 +10,14 @@ int main(int argc, const char * argv[]) {
     graphe* graphe = NULL;
     
     while (choix != 10) {
-        printf("\n1. Créer un graphe vide\n");
+        printf("\n1. Creer un graphe vide\n");
         printf("2. Construire un graphe de N sommets\n");
         printf("3. Ajouter un sommet\n");
-        printf("4. Ajouter une arête\n");
+        printf("4. Ajouter une arete\n");
         printf("5. Afficher un graphe\n");
-        printf("6. Donner le degré maximal du graphe\n");
+        printf("6. Donner le degre maximal du graphe\n");
         printf("7. Supprimer un sommet\n");
-        printf("8. Vérifier si le graphe contient une boucle\n");
+        printf("8. Verifier si le graphe contient une boucle\n");
         printf("9. Fusionner deux sommets\n");
         printf("10. Quitter\n");
         
@@ -29,14 +29,14 @@ int main(int argc, const char * argv[]) {
                     graphe = creerGraphe();
                     break;
                 case 2:
-                    printf("Quelle est la taille du graphe à construire ?\n");
+                    printf("Quelle est la taille du graphe a construire ?\n");
                     scanf("%d", &N);
                     graphe = construireGraphe(N);
                     break;
                 case 10:
                     break;
                 default:
-                    printf("Vous n'avez pas encore crée de graphe !\n");
+                    printf("Vous n'avez pas encore cree de graphe !\n");
             }
         } else {
             switch (choix) {
@@ -44,7 +44,7 @@ int main(int argc, const char * argv[]) {
                     graphe = creerGraphe();
                     break;
                 case 2:
-                    printf("Quelle est la taille du graphe à construire ?\n");
+                    printf("Quelle est la taille du graphe a construire ?\n");
                     scanf("%d", &N);
                     graphe = construireGraphe(N);
                     break;
@@ -60,7 +60,7 @@ int main(int argc, const char * argv[]) {
                     ajouterArete(graphe, indice1, indice2);
                     break;
                 case 5:
-                    afficherGraphe(graphe);
+                    afficherGraphe(*graphe);
                     break;
                 case 6:
                     degre_maximal = rechercherDegre(*graphe);
